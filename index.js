@@ -9,10 +9,14 @@ app.use(express.json());
 const pool = new Pool({
   host: 'localhost',
   user: 'postgres',
-  password: 'pipe1234',
-  database: 'softlife',
+  password: 'pipe123412345678',
+  database: 'alwaysmusic',
   port: 5432,
 });
+
+app.use(express.static("public"));
+app.use(express.urlencoded({ extended: false })) // envio de post
+app.use(express.json()) // envío de post
 
 app.get('/', (req, res) => {
   // Aquí debes enviar el archivo HTML que mencionas
