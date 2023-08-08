@@ -9,8 +9,8 @@ app.use(express.json());
 const pool = new Pool({
   host: 'localhost',
   user: 'postgres',
-  password: 'pipe123412345678',
-  database: 'alwaysmusic',
+  password: 'pipe1234',
+  database: 'grupal3',
   port: 5432,
 });
 
@@ -23,6 +23,11 @@ app.get('/', (req, res) => {
   res.sendFile('index.html');
 });
 
+app.get('/users', async (req, res) => {
+  const result = await pool.query('SELECT email, password FROM usuarios');
+  res.json(result.rows);
+});
+
 app.post('/register', async (req, res) => {
   const { email, password } = req.body;
   const result = await pool.query('INSERT INTO usuarios (email, password) VALUES ($1, $2) RETURNING *', [email, password]);
@@ -31,14 +36,15 @@ app.post('/register', async (req, res) => {
 
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
+  console.log(req.body)
   const result = await pool.query('SELECT * FROM usuarios WHERE email = $1 AND password = $2', [email, password]);
   if (result.rows.length > 0) {
     res.json({ message: 'Login successful', user: result.rows[0] });
   } else {
-    res.status(401).json({ message: 'Invalid credentials' });
+    res.status(401).json({ message: 'Email o password incorrecto' });
   }
 });
 
 app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+  console.log('Server is running on port http://localhost:3000');
 });
