@@ -29,9 +29,14 @@ app.get('/users', async (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
+  try{
   const { email, password } = req.body;
   const result = await pool.query('INSERT INTO usuarios (email, password) VALUES ($1, $2) RETURNING *', [email, password]);
   res.json(result.rows[0]);
+  }catch(error){
+            console.log("Error:" + error);
+            res.status(409).json({ message: "El Email ya está en la base de datos" }); // Enviar un mensaje de error con un código de estado 409
+  }
 });
 
 app.post('/login', async (req, res) => {

@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     e.preventDefault();
     const emailCrear = document.getElementById("emailCrear").value;
     const passwordCrear = document.getElementById("passwordCrear").value;
-    try {
+    
       const response = await fetch('/register', {
         method: 'POST',
         headers: {
@@ -19,11 +19,14 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       const data = await response.json();
-      addUserToTable(data.email, data.password);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  });
+
+      if (response.status === 409) {
+        alert(data.message); // Mostrar el mensaje de error enviado desde el servidor
+      } else {
+        addUserToTable(data.email, data.password);
+      
+  }
+});
 
   iniciarSesionBtn.addEventListener("click", async function (e) {
     e.preventDefault();
@@ -43,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
       alert(`Login exitoso, usuario ${data.user.email}`);
     } catch (error) {
       console.error('Error:', error);
+      alert("Usuario y/o password incorrecto");
     }
   });
 
